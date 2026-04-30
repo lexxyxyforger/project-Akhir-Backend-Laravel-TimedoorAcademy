@@ -1,58 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛍️ Backend API Online Shop
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **High-Performance RESTful JSON API for E-Commerce Product Management.**  
+> *Solid architecture, strict validation, and optimized for production environments.*
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🖥️ Environment Specifications
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Component | Specification |
+| :--- | :--- |
+| **Framework** | Laravel 13 (Latest Stable) |
+| **Language** | PHP 8.3+ |
+| **Database** | MySQL 8.0+ |
+| **OS Environment** | Ubuntu 26.04 LTS |
+| **Development Device** | ASUS Vivobook 14 |
+| **Processor** | Intel® Core™ i3-1315U (10 Cores) |
+| **API Format** | JSON (Stateless) |
+| **Authentication** | None (Public Data API) |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📋 System Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Sistem ini adalah **Backend API berbasis REST** yang dirancang khusus untuk mengelola siklus data produk pada platform online shop. Dibangun di atas fondasi **Laravel 13**, sistem ini mengutamakan integritas data, kecepatan respons, dan kemudahan integrasi dengan frontend atau mobile app.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Core Features:
+*   **RESTful Standard:** Mengikuti prinsip HTTP methods standar untuk operasi CRUD.
+*   **JSON Response:** Seluruh response dikembalikan dalam format JSON yang terstruktur dan konsisten.
+*   **Strict Validation:** Menggunakan Laravel Request Validation untuk memastikan hanya data valid yang masuk ke database.
+*   **Optimized Query:** Memanfaatkan Eloquent ORM dengan *eager loading* untuk meminimalisir masalah N+1 query.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+> ⚠️ **Catatan Penting:**  
+> Project ini adalah **sistem final** yang berfokus pada manajemen data produk. Sistem ini **tidak** mengimplementasikan fitur login/register (autentikasi pengguna) pada tahap ini, sehingga endpoint bersifat publik untuk keperluan demonstrasi logika backend dan manipulasi data.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🚀 API Endpoint Showcase
 
-```bash
-composer require laravel/boost --dev
+Berikut adalah daftar endpoint utama untuk manajemen produk. Semua endpoint mengembalikan response dalam format JSON.
 
-php artisan boost:install
-```
+| Method | Endpoint | Function | Description |
+| :---: | :--- | :--- | :--- |
+| `GET` | `/api/products` | `index()` | Mengambil daftar semua produk dengan dukungan pagination. |
+| `POST` | `/api/products` | `store()` | Menyimpan data produk baru ke database. |
+| `GET` | `/api/products/{id}` | `show()` | Mengambil detail spesifik satu produk berdasarkan ID. |
+| `PUT` | `/api/products/{id}` | `update()` | Memperbarui data produk yang sudah ada secara keseluruhan. |
+| `DELETE` | `/api/products/{id}` | `destroy()` | Menghapus data produk dari database secara permanen. |
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## ❓ Technical Q&A: Implementation Details
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Bagian ini menjawab pertanyaan teknis mengenai validasi, keamanan, dan performa sistem.
 
-## Code of Conduct
+### 1. Bagaimana mekanisme validasi input pada formulir online shop?
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Validasi adalah garis pertahanan pertama untuk menjaga kualitas data. Dalam sistem ini, kami menggunakan **Laravel Form Request Validation** yang dipisahkan dari Controller untuk menjaga kode tetap bersih (*clean code*).
 
-## Security Vulnerabilities
+*   **Rule Penerapan:**
+    *   `required`: Memastikan field kritis seperti `name`, `price`, dan `stock` tidak kosong.
+    *   `numeric` & `min:0`: Memastikan harga dan stok berupa angka positif.
+    *   `string` & `max:255`: Membatasi panjang teks nama produk agar efisien di database.
+    *   `unique:products`: Mencegah duplikasi data jika diperlukan (misalnya SKU).
+*   **Dampak:** Jika validasi gagal, API akan langsung mengembalikan response `422 Unprocessable Entity` dengan pesan error yang spesifik, sehingga database terlindungi dari data sampah (*garbage data*).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Bagaimana mekanisme autentikasi dan keamanan akun diterapkan?
 
-## License
+Sesuai dengan ruang lingkup project saat ini, **sistem ini tidak mengimplementasikan autentikasi (Login/Register)**. Fokus utama adalah pada penyediaan API data produk yang cepat dan andal.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Namun, keamanan tetap dijaga melalui pendekatan berikut:
+*   **Strict Input Sanitization:** Semua input pengguna dibersihkan dan divalidasi ketat sebelum diproses, mencegah serangan *SQL Injection* dan *XSS* dasar.
+*   **Mass Assignment Protection:** Menggunakan properti `$fillable` di Model Eloquent untuk memastikan hanya kolom yang diizinkan saja yang bisa diisi oleh user.
+*   **HTTP Methods Enforcement:** Router hanya menerima method HTTP yang sesuai (misalnya, `DELETE` hanya bisa lewat method DELETE, bukan GET).
+
+> 💡 **Future Development:**  
+> Jika sistem ini dikembangkan ke tahap produksi penuh dengan user, kami siap mengintegrasikan **Laravel Sanctum** untuk autentikasi berbasis token (API Tokens) atau **JWT** untuk stateless authentication yang skalabel.
+
+### 3. Bagaimana strategi searching, sorting, dan kelancaran CRUD?
+
+Performa adalah kunci dalam aplikasi e-commerce. Berikut adalah teknik yang digunakan:
+
+*   **Searching:** Menggunakan **Query Builder** dengan klausa `LIKE` untuk pencarian nama produk. Query dioptimasi agar tidak melakukan full-table scan pada dataset besar.
+*   **Sorting:** Menggunakan metode `orderBy()` dinamis berdasarkan parameter request (misalnya: `sort=price&order=desc`), memungkinkan user mengurutkan produk dari termurah atau terbaru.
+*   **CRUD Efficiency:** Seluruh operasi database ditangani oleh **Eloquent ORM**.
+*   **Optimasi Query:** Untuk relasi (jika ada kategori atau review), kami menggunakan **Eager Loading** (`with()`) untuk memuat data relasi dalam satu query utama, menghindari masalah performa *N+1 query* yang umum terjadi pada aplikasi Laravel.
+
+---
+
+## 🧠 Clean Logic Explanation
+
+Mengapa arsitektur ini dipilih?
+
+1.  **Direct Database Interaction via Eloquent:**  
+    Kami memilih Eloquent ORM daripada Raw SQL karena keterbacaan (*readability*) dan keamanan. Eloquent secara otomatis menangani *escaping* nilai input, mengurangi risiko human error dalam penulisan query.
+2.  **Scalability:**  
+    Struktur controller yang tipis (*Thin Controller*) dan logika bisnis yang terpusat memudahkan pengembang lain untuk memahami alur data. Jika traffic meningkat, struktur ini mudah di-cache menggunakan Redis atau Dioptimasi dengan Database Indexing.
+3.  **Maintainability:**  
+    Dengan memisahkan validasi ke dalam `FormRequest` dan logika database ke dalam `Model`, kode menjadi modular. Perubahan pada rule validasi tidak akan merusak logika controller.
+
+---
+
+## 🏁 Closing
+
+Project **Backend API Online Shop** ini dibangun dengan prinsip **Clean Architecture** dan **Efficient Query Handling**. Meskipun saat ini berfokus pada manajemen data produk tanpa autentikasi, fondasi yang diletakkan sudah cukup kuat untuk skala produksi.
+
+Sistem ini siap untuk:
+*   Diintegrasikan dengan Frontend (Vue/React/Next.js).
+*   Dikembangkan lebih lanjut dengan fitur Auth (Sanctum/JWT).
+*   Diperluas dengan fitur Cart, Checkout, dan Payment Gateway.
+
+*Dibuat dengan ❤️ menggunakan Laravel 13 & Ubuntu 26.04.*
