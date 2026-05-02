@@ -9,13 +9,12 @@ class Product extends Model
 {
     use HasFactory;
 
-    // Menentukan kolom mana saja yang boleh diisi (Mass Assignment)
-    // Penting supaya fungsi Product::create() di Controller tidak error
     protected $fillable = [
         'category_id',
         'name',
         'price',
-        'stock'
+        'stock',
+        'image_url'
     ];
 
     public function category()
